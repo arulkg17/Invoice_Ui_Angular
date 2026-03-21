@@ -1,0 +1,66 @@
+<div style="margin: 20px">
+  <h2>{{ isEdit ? "Edit Item" : "Create Item" }}</h2>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Category</mat-label>
+      <input matInput formControlName="catCode" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Item Bar Code</mat-label>
+      <input matInput formControlName="itemBarCode" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Item Code</mat-label>
+      <input matInput formControlName="itemCode" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Item Name</mat-label>
+      <input matInput formControlName="itemName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Description</mat-label>
+      <input matInput formControlName="description" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>UOM</mat-label>
+      <input matInput formControlName="uom" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Rate</mat-label>
+      <input matInput formControlName="rate" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Minimum Stock </mat-label>
+      <input matInput formControlName="minimumStock" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Maximum Stock</mat-label>
+      <input matInput formControlName="maximumStock" />
+    </mat-form-field>
+
+    <mat-label>Is Active</mat-label>
+    <mat-radio-group formControlName="isActive" class="radio-group">
+      <mat-radio-button [value]="true" color="primary">Active</mat-radio-button>
+      <mat-radio-button [value]="false" color="warn">Inactive</mat-radio-button>
+    </mat-radio-group>
+
+    <br /><br />
+
+    <button mat-flat-button color="primary">
+      {{ isEdit ? "Update" : "Save" }}
+    </button>
+
+    <button mat-stroked-button routerLink="/items" style="margin-left: 10px">
+      Cancel
+    </button>
+  </form>
+</div>
