@@ -1,66 +1,137 @@
-<div style="margin: 20px">
-  <h2>{{ isEdit ? "Edit Item" : "Create Item" }}</h2>
+<div class="item-form-small" style="margin: 20px">
+  <h3>{{ isEdit ? "Edit Item" : "Create Item" }}</h3>
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Category</mat-label>
-      <input matInput formControlName="catCode" />
-    </mat-form-field>
+  <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="form">
 
-    <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Item Bar Code</mat-label>
-      <input matInput formControlName="itemBarCode" />
-    </mat-form-field>
+    <!-- Category -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" style="width: 50%;">
+        <mat-label>Category</mat-label>
+        <input matInput formControlName="catCode" appSelectOnFocus />
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['catCode'].touched) && f['catCode'].errors?.['required']">
+          <mat-icon color="warn">error</mat-icon> Category is required
+        </mat-error>
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['catCode'].touched) && f['catCode'].errors?.['minlength']">
+          <mat-icon color="warn">error</mat-icon> Minimum {{ f['catCode'].errors?.['minlength']?.requiredLength }} character required
+        </mat-error>
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['catCode'].touched) && f['catCode'].errors?.['maxlength']">
+          <mat-icon color="warn">error</mat-icon> Maximum {{ f['catCode'].errors?.['maxlength']?.requiredLength }} characters allowed
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Item Code</mat-label>
-      <input matInput formControlName="itemCode" />
-    </mat-form-field>
+    <!-- Item Bar Code -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" style="width: 50%;">
+        <mat-label>Item Bar Code</mat-label>
+        <input matInput formControlName="itemBarCode" appSelectOnFocus />
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['itemBarCode'].touched) && f['itemBarCode'].errors?.['required']">
+          <mat-icon color="warn">error</mat-icon> Item Bar Code is required
+        </mat-error>
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['itemBarCode'].touched) && f['itemBarCode'].errors?.['minlength']">
+          <mat-icon color="warn">error</mat-icon> Minimum {{ f['itemBarCode'].errors?.['minlength']?.requiredLength }} character required
+        </mat-error>
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['itemBarCode'].touched) && f['itemBarCode'].errors?.['maxlength']">
+          <mat-icon color="warn">error</mat-icon> Maximum {{ f['itemBarCode'].errors?.['maxlength']?.requiredLength }} characters allowed
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Item Name</mat-label>
-      <input matInput formControlName="itemName" />
-    </mat-form-field>
+    <!-- Item Code -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" style="width: 50%;">
+        <mat-label>Item Code</mat-label>
+        <input matInput formControlName="itemCode" appSelectOnFocus />
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['itemCode'].touched) && f['itemCode'].errors?.['required']">
+          <mat-icon color="warn">error</mat-icon> Item Code is required
+        </mat-error>
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['itemCode'].touched) && f['itemCode'].errors?.['minlength']">
+          <mat-icon color="warn">error</mat-icon> Minimum {{ f['itemCode'].errors?.['minlength']?.requiredLength }} character required
+        </mat-error>
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['itemCode'].touched) && f['itemCode'].errors?.['maxlength']">
+          <mat-icon color="warn">error</mat-icon> Maximum {{ f['itemCode'].errors?.['maxlength']?.requiredLength }} characters allowed
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Description</mat-label>
-      <input matInput formControlName="description" />
-    </mat-form-field>
+    <!-- Item Name -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" style="width: 50%;">
+        <mat-label>Item Name</mat-label>
+        <input matInput formControlName="itemName" appSelectOnFocus />
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['itemName'].touched) && f['itemName'].errors?.['required']">
+          <mat-icon color="warn">error</mat-icon> Item Name is required
+        </mat-error>
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['itemName'].touched) && f['itemName'].errors?.['minlength']">
+          <mat-icon color="warn">error</mat-icon> Minimum {{ f['itemName'].errors?.['minlength']?.requiredLength }} character required
+        </mat-error>
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['itemName'].touched) && f['itemName'].errors?.['maxlength']">
+          <mat-icon color="warn">error</mat-icon> Maximum {{ f['itemName'].errors?.['maxlength']?.requiredLength }} characters allowed
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>UOM</mat-label>
-      <input matInput formControlName="uom" />
-    </mat-form-field>
+    <!-- Description -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" style="width: 50%;">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="3"  appSelectOnFocus ></textarea>
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['description'].touched) && f['description'].errors?.['maxlength']">
+          <mat-icon color="warn">error</mat-icon> Maximum {{ f['description'].errors?.['maxlength']?.requiredLength }} characters allowed
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Rate</mat-label>
-      <input matInput formControlName="rate" />
-    </mat-form-field>
+    <!-- UOM -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" style="width: 50%;">
+        <mat-label>UOM</mat-label>
+        <mat-select formControlName="uom">
+          <mat-option *ngFor="let uom of uomLists" [value]="uom">{{ uom }}</mat-option>
+        </mat-select>
+        <mat-error class="error-text" *ngIf="(isSubmitted || f['uom'].touched) && f['uom'].errors?.['required']">
+          <mat-icon color="warn">error</mat-icon> UOM is required
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Minimum Stock </mat-label>
-      <input matInput formControlName="minimumStock" />
-    </mat-form-field>
+    <!-- Rate -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" style="width: 50%;">
+        <mat-label>Rate</mat-label>
+        <input matInput formControlName="rate" appSelectOnFocus />
+      </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline" style="width: 100%">
-      <mat-label>Maximum Stock</mat-label>
-      <input matInput formControlName="maximumStock" />
-    </mat-form-field>
+    <!-- Minimum Stock -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" style="width: 50%;">
+        <mat-label>Minimum Stock</mat-label>
+        <input matInput formControlName="minimumStock" appSelectOnFocus />
+      </mat-form-field>
+    </div>
 
-    <mat-label>Is Active</mat-label>
-    <mat-radio-group formControlName="isActive" class="radio-group">
-      <mat-radio-button [value]="true" color="primary">Active</mat-radio-button>
-      <mat-radio-button [value]="false" color="warn">Inactive</mat-radio-button>
-    </mat-radio-group>
+    <!-- Maximum Stock -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" style="width: 50%;">
+        <mat-label>Maximum Stock</mat-label>
+        <input matInput formControlName="maximumStock" appSelectOnFocus />
+      </mat-form-field>
+    </div>
 
-    <br /><br />
+    <!-- Is Active -->
+    <div class="form-field">
+      <mat-label>Is Active</mat-label>
+      <mat-radio-group formControlName="isActive" class="radio-group">
+        <mat-radio-button [value]="true" color="primary">Active</mat-radio-button>
+        <mat-radio-button [value]="false" color="warn">Inactive</mat-radio-button>
+      </mat-radio-group>
+    </div>
 
-    <button mat-flat-button color="primary">
-      {{ isEdit ? "Update" : "Save" }}
-    </button>
+    <br />
 
-    <button mat-stroked-button routerLink="/items" style="margin-left: 10px">
-      Cancel
-    </button>
+    <!-- Buttons -->
+    <button mat-flat-button color="primary">{{ isEdit ? "Update" : "Save" }}</button>
+    <button mat-stroked-button routerLink="/items" style="margin-left: 10px">Cancel</button>
   </form>
 </div>

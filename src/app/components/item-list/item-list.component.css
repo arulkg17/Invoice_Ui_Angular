@@ -20,3 +20,10 @@ tr:nth-child(even) {
 tr:hover {
     background-color: #f1f1f1; /* hover effect */
 }
+
+.wrap-text {
+  white-space: normal;      /* allow line breaks */
+  word-break: break-word;   /* break long words */
+  max-width: 175px;         /* adjust width for 25 chars */
+  line-height: 1.2;         /* optional: better spacing */
+}
