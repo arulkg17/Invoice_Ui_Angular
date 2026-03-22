@@ -10,8 +10,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
-import { ItemRequest } from '../../models/itemrequest';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+
 import { Itemmaster } from '../../models/itemmaster';
+import { SelectOnFocusDirective } from "../../custom-directives/select-on-focus.directive";
 
 @Component({
   selector: 'app-item-form',
@@ -23,9 +26,13 @@ import { Itemmaster } from '../../models/itemmaster';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatRadioModule
-  ],
-  templateUrl: './item-form.component.html'
+    MatRadioModule,
+    MatSelectModule,
+    MatIconModule,
+    SelectOnFocusDirective
+],
+  templateUrl: './item-form.component.html',
+  styleUrls: ['./item-form.component.css']
 })
 export class ItemFormComponent implements OnInit {
 
@@ -33,7 +40,8 @@ export class ItemFormComponent implements OnInit {
   
   isEdit = false;
   id!: number;
-
+  uomLists : string[] = ['KGS','NOS','LTR','DOZ'];
+  isSubmitted = false;
   constructor(
     private fb: FormBuilder,
     private service: ItemmasterService,
@@ -41,16 +49,19 @@ export class ItemFormComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar
   ) {}
+  
+  get f(){
+    return this.form.controls;
+  }
 
   ngOnInit(): void {
-
     this.form = this.fb.group({
-      catCode: [''],
-      itemBarCode:[''],
-      itemCode: [''],
-      itemName: [''],
-      description:[''],
-      uom:[''],
+      catCode: ['', [Validators.required, Validators.minLength(1),Validators.maxLength(5)]],
+      itemBarCode:['', [Validators.required, Validators.minLength(1), Validators.maxLength(25)]],
+      itemCode: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(10)]],
+      itemName: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
+      description:['', Validators.maxLength(250)],
+      uom:['', Validators.required],
       rate:[0],
       minimumStock:[0],
       maximumStock:[0],
@@ -74,7 +85,12 @@ export class ItemFormComponent implements OnInit {
   }
 
   submit() {
-    if(this.form.invalid) return;
+    this.isSubmitted = true;
+    if(this.form.invalid)
+      { 
+       this.form.markAllAsTouched();
+        return;
+      }
     const formValue = this.form.value;
     const payload: Itemmaster = {
         ...formValue,

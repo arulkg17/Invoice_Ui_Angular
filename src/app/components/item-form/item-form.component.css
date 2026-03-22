@@ -1,0 +1,68 @@
+/* ===================== Error Messages ===================== */
+.error-text {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  color: #d32f2f;
+}
+
+.error-text mat-icon {
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+/* ===================== Form Field Styling ===================== */
+::ng-deep .mat-mdc-form-field.mat-form-field-invalid .mat-mdc-floating-label {
+  color: #d32f2f !important;
+  font-weight: bold;
+}
+
+.form-field {
+  margin-bottom: 10px; /* space between fields */
+}
+
+/* ===================== Small Form Styling ===================== */
+.item-form-small .mat-mdc-form-field {
+  font-size: 14px;           /* smaller font */
+  min-height: 35px;          /* smaller container */
+}
+
+.item-form-small .mat-mdc-form-field-flex {
+  padding: 0 8px;           /* reduce extra vertical padding */
+}
+
+.item-form-small .mat-mdc-input-element {
+  height: 28px;              /* smaller input box */
+  padding: 0 8px;            /* remove extra padding */
+  font-size: 14px;
+  line-height: 28px;         /* vertical alignment */
+}
+
+.item-form-small .mat-mdc-floating-label {
+  font-size: 12px;
+}
+
+.item-form-small .mat-mdc-form-field-subscript-wrapper {
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* ===================== Radio Button Styling ===================== */
+.item-form-small .mat-radio-button .mat-radio-label {
+  font-size: 13px;
+  margin: 0 8px 0 0;
+}
+
+.item-form-small .mat-radio-container {
+  height: 20px;
+}
+
+.item-form-small textarea.mat-mdc-input-element {
+  height: auto;         /* let height grow naturally */
+  min-height: 50px;     /* adjust as needed */
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 20px;
+  resize: vertical;     /* allow user to resize if needed */
+}
