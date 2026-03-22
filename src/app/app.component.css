@@ -17,3 +17,31 @@
 .navbar a:hover {
   color: #ffeb3b;
 }
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* Top Menu Styling */
+.top-menu {
+  background-color: #1976d2; /* bright blue */
+  color: #ffffff;            /* white text */
+  font-weight: 500;
+}
+
+/* Menu buttons */
+.top-menu button {
+  color: #ffffff !important;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+/* Hover effect */
+.top-menu button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+/* Active link (optional highlight) */
+.top-menu button.active-link {
+  background: linear-gradient(90deg, #1976d2, #42a5f5);
+}

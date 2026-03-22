@@ -2,8 +2,6 @@ import { Injectable, signal } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Itemmaster } from "../models/itemmaster"; 
-import { Signal } from "@angular/core";
-import { ItemRequest } from "../models/itemrequest";
 
 @Injectable({
   providedIn:'root'
