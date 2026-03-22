@@ -1,8 +1,36 @@
-<nav class="navbar">
-  <a routerLink="/" routerLinkActive="active">Home</a>
-  <a routerLink="/items" routerLinkActive="active">Itemmaster</a>
-</nav>
+<mat-toolbar class="top-menu">
 
-<hr />
+  <!-- Home -->
+  <button mat-button routerLink="/home" routerLinkActive="active-link">Home</button>
 
+  <!-- Masters Menu -->
+  <button mat-button [matMenuTriggerFor]="mastersMenu" routerLinkActive="active-link">Masters</button>
+  <mat-menu #mastersMenu="matMenu">
+    <button mat-menu-item routerLink="/masters/categories">Categories</button>
+    <button mat-menu-item routerLink="/masters/items">Items</button>
+    <button mat-menu-item routerLink="/masters/customers">Customers</button>
+    <button mat-menu-item routerLink="/masters/vendors">Vendors</button>
+  </mat-menu>
+
+  <!-- Transactions Menu -->
+  <button mat-button [matMenuTriggerFor]="transMenu" routerLinkActive="active-link">Transactions</button>
+  <mat-menu #transMenu="matMenu">
+    <button mat-menu-item routerLink="/transactions/indent">Indent</button>
+    <button mat-menu-item routerLink="/transactions/po">Purchase Order</button>
+    <button mat-menu-item routerLink="/transactions/inward">Material Inward</button>
+    <button mat-menu-item routerLink="/transactions/receipt">Receipt</button>
+  </mat-menu>
+
+  <!-- Other Menus -->
+  <button mat-button>Processings</button>
+  <button mat-button>Reports</button>
+  <button mat-button>Utilities</button>
+
+  <span class="spacer"></span>
+
+  <button mat-button color="warn">Exit</button>
+
+</mat-toolbar>
+
+<!-- Route View -->
 <router-outlet></router-outlet>

@@ -106,7 +106,7 @@ export class ItemFormComponent implements OnInit {
           this.snackBar.open('Item updated successfully', 'Close', {
             duration: 3000
           });
-          this.router.navigate(['/items']);
+          this.router.navigate(['/masters/items']);
         },
         error: () => {
           this.snackBar.open('Error updating item', 'Close', {
@@ -120,7 +120,7 @@ export class ItemFormComponent implements OnInit {
           this.snackBar.open('Item created successfully', 'Close', {
             duration: 3000
           });
-          this.router.navigate(['/items']);
+          this.router.navigate(['/masters/items']);
         },
         error: () => {
           this.snackBar.open('Error creating item', 'Close', {

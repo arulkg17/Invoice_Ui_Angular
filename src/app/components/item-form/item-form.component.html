@@ -121,7 +121,7 @@
 
     <!-- Is Active -->
     <div class="form-field">
-      <mat-label>Is Active</mat-label>
+      <mat-label>Is Active?</mat-label>
       <mat-radio-group formControlName="isActive" class="radio-group">
         <mat-radio-button [value]="true" color="primary">Active</mat-radio-button>
         <mat-radio-button [value]="false" color="warn">Inactive</mat-radio-button>
@@ -132,6 +132,6 @@
 
     <!-- Buttons -->
     <button mat-flat-button color="primary">{{ isEdit ? "Update" : "Save" }}</button>
-    <button mat-stroked-button routerLink="/items" style="margin-left: 10px">Cancel</button>
+    <button mat-stroked-button routerLink="/masters/items" style="margin-left: 10px">Cancel</button>
   </form>
 </div>

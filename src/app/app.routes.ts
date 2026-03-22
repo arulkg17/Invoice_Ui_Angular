@@ -1,12 +1,33 @@
 import { Routes } from "@angular/router";
-import { ItemListComponent } from "./components/item-list/item-list.component";
-import { ItemFormComponent } from "./components/item-form/item-form.component";
-import { HomeComponent } from "./pages/home/home.component";
 
 export const routes: Routes = [
-    { path:'', component:HomeComponent},
-    { path:'items', component: ItemListComponent},
-    { path:'create', component:ItemFormComponent},
-    { path:'edit/:id', component:ItemFormComponent},
-    { path:'**', redirectTo:''} 
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+
+  { path: 'home', loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent) },
+
+  // Masters
+  {
+    path: 'masters',
+    children: [
+      { path: 'categories', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) },
+      { path: 'items', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) },
+      { path: 'items/create', loadComponent: () => import('./components/item-form/item-form.component').then(m => m.ItemFormComponent) },
+      { path: 'items/edit/:id', loadComponent: () => import('./components/item-form/item-form.component').then(m => m.ItemFormComponent) },
+      { path: 'customers', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) },
+      { path: 'vendors', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) }
+    ]
+  },
+
+  // Transactions
+  {
+    path: 'transactions',
+    children: [
+      { path: 'indent', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) },
+      { path: 'po', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) },
+      { path: 'inward', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) },
+      { path: 'receipt', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) }
+    ]
+  },
+
+  { path: '**', redirectTo: 'home' }
 ];
