@@ -63,8 +63,9 @@ export class ItemListComponent implements OnInit {
             if(!result) return;
             this.service.delete(id).subscribe({
                 next: () =>{
-                    this.items.update(list=>list.filter(i=>i.id !== id));
-                    this.dataSource.data = this.items();
+                    //this.items.update(list=>list.filter(i=>i.id !== id));
+                    //this.dataSource.data = this.items();
+                    this.loadItems();
                     this.snackBar.open('Item delete successfully','Close',
                         {duration:3000}
                     );
