@@ -3,18 +3,21 @@ import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { ItemmasterService } from "../../services/itemmaster.service";
 import { Itemmaster } from "../../models/itemmaster";
-
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from "@angular/material/button";
 import { MatSnackBar } from '@angular/material/snack-bar';
-
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { ConfirmDialogComponent } from "../../shared/confirm-dialog/confirm-dialog.component";
+import { ItemFormComponent } from "../item-form/item-form.component";
 
 @Component({
     selector:'app-item-list',
     standalone:true,
-    imports:[CommonModule,RouterModule,MatTableModule,MatButtonModule],
+    imports:[CommonModule,
+        RouterModule,
+        MatTableModule,
+        MatButtonModule,
+        MatDialogModule],
     templateUrl:'./item-list.component.html',
     styleUrls:['./item-list.component.css']
 })
@@ -73,4 +76,24 @@ export class ItemListComponent implements OnInit {
             });
         });
     } 
+    openAddDialog(){
+        const dialogRef = this.dialog.open(ItemFormComponent, {
+            width:'700px',
+            maxHeight:'80vh',
+            panelClass:'custom-dialog',
+            data:null
+        });
+        dialogRef.afterClosed().subscribe(result=>{
+            if(result) this.loadItems();
+        });
+    }
+    openEditDialog(item:any){
+        const dialogRef = this.dialog.open(ItemFormComponent, {
+            width:'700px',
+            data:item
+        });
+        dialogRef.afterClosed().subscribe(result=>{
+            if(result) this.loadItems();
+        });
+    }
 }

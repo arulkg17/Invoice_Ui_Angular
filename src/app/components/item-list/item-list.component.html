@@ -1,5 +1,5 @@
 <div style="margin: 20px">
-  <button mat-flat-button color="primary" routerLink="/masters/items/create">Add Item</button>
+  <button mat-flat-button color="primary" (click)="openAddDialog()">Add Item</button>
 
   <table
     mat-table
@@ -80,7 +80,7 @@
         <button
           mat-flat-button
           color="primary"
-          [routerLink]="['/masters/items/edit', item.id]"
+          (click)="openEditDialog(item)"
         >
           Edit
         </button>
