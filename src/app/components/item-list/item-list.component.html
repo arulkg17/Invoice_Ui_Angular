@@ -1,101 +1,84 @@
 <div style="margin: 20px">
-  <button mat-flat-button color="primary" (click)="openAddDialog()">Add Item</button>
+  <div *ngIf="isLoading">Loading....</div>
 
-  <table
-    mat-table
-    [dataSource]="dataSource"
-    class="mat-elevation-z8"
-    style="width: 100%; margin-top: 20px"
-  >
-    <!-- cat Code-->
+  <div style="margin-bottom: 10px; display: flex; gap: 10px;">
+    <button mat-flat-button color="primary" (click)="openAddDialog()">Add Item</button>
+
+    <mat-form-field appearance="outline" style="flex: 1;">
+      <mat-label>Search</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Search items..." />
+    </mat-form-field>
+  </div>
+
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="width:100%">
+    
+    <!-- Columns -->
     <ng-container matColumnDef="catCode">
-      <th mat-header-cell *matHeaderCellDef>Cat Code</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Cat Code</th>
       <td mat-cell *matCellDef="let item">{{ item.catCode }}</td>
     </ng-container>
 
-    <!-- item Bar Code-->
     <ng-container matColumnDef="itemBarCode">
-      <th mat-header-cell *matHeaderCellDef>Item Bar Code</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Bar Code</th>
       <td mat-cell *matCellDef="let item">{{ item.itemBarCode }}</td>
     </ng-container>
 
-    <!-- Item Code -->
     <ng-container matColumnDef="itemCode">
-      <th mat-header-cell *matHeaderCellDef>Item Code</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Code</th>
       <td mat-cell *matCellDef="let item">{{ item.itemCode }}</td>
     </ng-container>
 
-    <!-- Item Name -->
     <ng-container matColumnDef="itemName">
-      <th mat-header-cell *matHeaderCellDef>Item Name</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Name</th>
       <td mat-cell *matCellDef="let item" class="wrap-text">
-        {{ item.itemName | slice: 0 : 25
-        }}<span *ngIf="item.itemName.length > 25">...</span>
+        {{ item.itemName | slice:0:25 }}<span *ngIf="item.itemName.length>25">...</span>
       </td>
     </ng-container>
 
-    <!-- Description -->
     <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
       <td mat-cell *matCellDef="let item" class="wrap-text">
-        {{ item.description | slice: 0 : 25
-        }}<span *ngIf="item.description.length > 25">...</span>
+        {{ item.description | slice:0:25 }}<span *ngIf="item.description.length>25">...</span>
       </td>
     </ng-container>
 
-    <!-- UOM -->
     <ng-container matColumnDef="uom">
-      <th mat-header-cell *matHeaderCellDef>UOM</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>UOM</th>
       <td mat-cell *matCellDef="let item">{{ item.uom }}</td>
     </ng-container>
 
-    <!-- Rate -->
     <ng-container matColumnDef="rate">
-      <th mat-header-cell *matHeaderCellDef>Rate</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Rate</th>
       <td mat-cell *matCellDef="let item">{{ item.rate }}</td>
     </ng-container>
 
-    <!-- Minimum Stock -->
     <ng-container matColumnDef="minimumStock">
-      <th mat-header-cell *matHeaderCellDef>Min Stock</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Min Stock</th>
       <td mat-cell *matCellDef="let item">{{ item.minimumStock }}</td>
     </ng-container>
 
-    <!-- Maximum Stock -->
     <ng-container matColumnDef="maximumStock">
-      <th mat-header-cell *matHeaderCellDef>Max Stock</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Max Stock</th>
       <td mat-cell *matCellDef="let item">{{ item.maximumStock }}</td>
     </ng-container>
 
-    <!-- Status -->
     <ng-container matColumnDef="isActive">
-      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
       <td mat-cell *matCellDef="let item">{{ item.isActive }}</td>
     </ng-container>
 
-    <!-- Actions -->
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let item">
-        <button
-          mat-flat-button
-          color="primary"
-          (click)="openEditDialog(item)"
-        >
-          Edit
-        </button>
-
-        <button
-          mat-flat-button
-          color="warn"
-          (click)="delete(item.id, item.itemName)"
-        >
-          Delete
-        </button>
+        <button mat-flat-button color="primary" (click)="openEditDialog(item)">Edit</button>
+        <button mat-flat-button color="warn" (click)="delete(item.id,item.itemName)">Delete</button>
       </td>
     </ng-container>
 
+    <!-- Header & Rows -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
+
+  <mat-paginator [pageSize]="10" showFirstLastButtons></mat-paginator>
 </div>
