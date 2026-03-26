@@ -4,10 +4,21 @@
   <div style="margin-bottom: 10px; display: flex; gap: 10px;">
     <button mat-flat-button color="primary" (click)="openAddDialog()">Add Item</button>
 
-    <mat-form-field appearance="outline" style="flex: 1;">
-      <mat-label>Search</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Search items..." />
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <input #catCodeInput matInput (keyup)="applyColumnFilter('catCode', $event)" />
     </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Item Name</mat-label>
+      <input #itemNameInput matInput (keyup)="applyColumnFilter('itemName', $event)" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>UOM</mat-label>
+      <input #uomInput matInput (keyup)="applyColumnFilter('uom', $event)" />
+    </mat-form-field>
+    <button mat-stroked-button (click)="clearFilters()">Clear</button>
   </div>
 
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="width:100%">
