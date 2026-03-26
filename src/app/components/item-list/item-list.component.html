@@ -1,29 +1,38 @@
 <div style="margin: 20px">
+
   <div *ngIf="isLoading">Loading....</div>
 
-  <div style="margin-bottom: 10px; display: flex; gap: 10px;">
-    <button mat-flat-button color="primary" (click)="openAddDialog()">Add Item</button>
+  <!-- FILTER SECTION -->
+  <form [formGroup]="filterForm" style="margin-bottom: 10px; display: flex; gap: 10px;">
 
     <mat-form-field appearance="outline">
       <mat-label>Category</mat-label>
-      <input #catCodeInput matInput (keyup)="applyColumnFilter('catCode', $event)" />
+      <input matInput formControlName="catCode">
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Item Name</mat-label>
-      <input #itemNameInput matInput (keyup)="applyColumnFilter('itemName', $event)" />
+      <input matInput formControlName="itemName">
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>UOM</mat-label>
-      <input #uomInput matInput (keyup)="applyColumnFilter('uom', $event)" />
+      <input matInput formControlName="uom">
     </mat-form-field>
-    <button mat-stroked-button (click)="clearFilters()">Clear</button>
-  </div>
 
+    <button mat-stroked-button type="button" (click)="clearFilters()">
+      Clear
+    </button>
+
+    <button mat-flat-button color="primary" type="button" (click)="openAddDialog()">
+      Add Item
+    </button>
+
+  </form>
+
+  <!-- TABLE -->
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="width:100%">
-    
-    <!-- Columns -->
+
     <ng-container matColumnDef="catCode">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Cat Code</th>
       <td mat-cell *matCellDef="let item">{{ item.catCode }}</td>
@@ -41,15 +50,15 @@
 
     <ng-container matColumnDef="itemName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Name</th>
-      <td mat-cell *matCellDef="let item" class="wrap-text">
-        {{ item.itemName | slice:0:25 }}<span *ngIf="item.itemName.length>25">...</span>
+      <td mat-cell *matCellDef="let item">
+        {{ item.itemName | slice:0:25 }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-      <td mat-cell *matCellDef="let item" class="wrap-text">
-        {{ item.description | slice:0:25 }}<span *ngIf="item.description.length>25">...</span>
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td mat-cell *matCellDef="let item">
+        {{ item.description | slice:0:25 }}
       </td>
     </ng-container>
 
@@ -64,17 +73,17 @@
     </ng-container>
 
     <ng-container matColumnDef="minimumStock">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Min Stock</th>
+      <th mat-header-cell *matHeaderCellDef>Min Stock</th>
       <td mat-cell *matCellDef="let item">{{ item.minimumStock }}</td>
     </ng-container>
 
     <ng-container matColumnDef="maximumStock">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Max Stock</th>
+      <th mat-header-cell *matHeaderCellDef>Max Stock</th>
       <td mat-cell *matCellDef="let item">{{ item.maximumStock }}</td>
     </ng-container>
 
     <ng-container matColumnDef="isActive">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <th mat-header-cell *matHeaderCellDef>Status</th>
       <td mat-cell *matCellDef="let item">{{ item.isActive }}</td>
     </ng-container>
 
@@ -82,14 +91,14 @@
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let item">
         <button mat-flat-button color="primary" (click)="openEditDialog(item)">Edit</button>
-        <button mat-flat-button color="warn" (click)="delete(item.id,item.itemName)">Delete</button>
+        <button mat-flat-button color="warn" (click)="delete(item.id, item.itemName)">Delete</button>
       </td>
     </ng-container>
 
-    <!-- Header & Rows -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 
   <mat-paginator [pageSize]="10" showFirstLastButtons></mat-paginator>
+
 </div>
