@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { authGuard } from "./guards/auth.guard";
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -8,6 +9,7 @@ export const routes: Routes = [
   // Masters
   {
     path: 'masters',
+    canActivate: [authGuard],
     children: [
       { path: 'categories', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) },
       { path: 'items', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) },
@@ -21,6 +23,7 @@ export const routes: Routes = [
   // Transactions
   {
     path: 'transactions',
+    canActivate:[authGuard],
     children: [
       { path: 'indent', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) },
       { path: 'po', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) },
