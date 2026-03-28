@@ -19,6 +19,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { ItemFormComponent } from '../item-form/item-form.component';
+import { PagedResult } from '../../models/paged-result';
 
 @Component({
   selector: 'app-item-list',
@@ -39,7 +40,6 @@ import { ItemFormComponent } from '../item-form/item-form.component';
   styleUrls: ['./item-list.component.css'],
 })
 export class ItemListComponent implements OnInit {
-
   items = signal<Itemmaster[]>([]);
   dataSource!: MatTableDataSource<Itemmaster>;
 
@@ -60,7 +60,9 @@ export class ItemListComponent implements OnInit {
   isLoading = false;
 
   filterForm!: FormGroup;
-
+  pageSize = 10;
+  pageIndex = 0;
+  totalRecords = 0;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -68,7 +70,7 @@ export class ItemListComponent implements OnInit {
     private service: ItemmasterService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private fb: FormBuilder
+    private fb: FormBuilder,
   ) {}
 
   ngOnInit(): void {
@@ -81,33 +83,16 @@ export class ItemListComponent implements OnInit {
     this.filterForm = this.fb.group({
       catCode: [''],
       itemName: [''],
-      uom: ['']
+      uom: [''],
     });
 
     this.filterForm.valueChanges
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged()
-      )
-      .subscribe(value => {
-        this.applyFilter(value);
+      .pipe(debounceTime(400), distinctUntilChanged())
+      .subscribe((value) => {
+         this.pageIndex=0;
+         this.loadItems();
       });
   }
-
-  applyFilter(filter: any) {
-    if (!this.dataSource) return;
-
-    this.dataSource.filterPredicate = (data: Itemmaster) => {
-      return (
-        (!filter.catCode || data.catCode?.toLowerCase().includes(filter.catCode.toLowerCase())) &&
-        (!filter.itemName || data.itemName?.toLowerCase().includes(filter.itemName.toLowerCase())) &&
-        (!filter.uom || data.uom?.toLowerCase().includes(filter.uom.toLowerCase()))
-      );
-    };
-
-    this.dataSource.filter = JSON.stringify(filter);
-  }
-
   clearFilters() {
     this.filterForm.reset({
       catCode: '',
@@ -115,7 +100,13 @@ export class ItemListComponent implements OnInit {
       uom: ''
     });
 
-    this.applyFilter(this.filterForm.value);
+    this.pageIndex = 0;
+    this.loadItems();
+  }
+  onPageChange(event: any) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadItems();
   }
 
   // ---------------- LOAD ITEMS ----------------
@@ -123,22 +114,28 @@ export class ItemListComponent implements OnInit {
     this.isLoading = true;
 
     try {
-      const res: any = await firstValueFrom(this.service.getAll());
+      const filter = this.filterForm.value || {};
 
-      this.items.set(res.data);
-      this.dataSource = new MatTableDataSource(res.data);
+      const res: PagedResult<Itemmaster> = await firstValueFrom(
+        this.service.getPagedItems(
+          filter.catCode,
+          filter.itemName,
+          filter.uom,
+          this.pageIndex + 1, // API usually 1-based
+          this.pageSize,
+        ),
+      );
+      
+      this.items.set(res?.data ?? []);
+      this.totalRecords = res.totalRecords;
+      this.dataSource = new MatTableDataSource(res?.data ?? []);
 
       setTimeout(() => {
-        this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
-
-      this.applyFilter(this.filterForm?.value || {});
-    }
-    catch {
+    } catch {
       this.snackBar.open('Item Loading Error', 'Close', { duration: 3000 });
-    }
-    finally {
+    } finally {
       this.isLoading = false;
     }
   }
@@ -162,8 +159,7 @@ export class ItemListComponent implements OnInit {
 
       await this.loadItems();
       this.clearFilters();
-    }
-    catch {
+    } catch {
       this.snackBar.open('Item delete error', 'Close', { duration: 3000 });
     }
   }
@@ -178,7 +174,7 @@ export class ItemListComponent implements OnInit {
       data: null,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) this.loadItems();
     });
   }
@@ -192,7 +188,7 @@ export class ItemListComponent implements OnInit {
       data: item,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) this.loadItems();
     });
   }

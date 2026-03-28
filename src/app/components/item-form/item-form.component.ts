@@ -126,4 +126,11 @@ export class ItemFormComponent implements OnInit {
       });
     }
   }
+   allowOnlyNumbers(event: KeyboardEvent) {
+    const charCode = event.key;
+
+    if (!/^[0-9]$/.test(charCode)) {
+      event.preventDefault();
+    }
+  }
 }

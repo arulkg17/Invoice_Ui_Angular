@@ -1,7 +1,8 @@
 import { Injectable, signal } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Itemmaster } from "../models/itemmaster"; 
+import { PagedResult } from "../models/paged-result";
 
 @Injectable({
   providedIn:'root'
@@ -12,7 +13,26 @@ export class ItemmasterService {
   items = signal<Itemmaster[]>([]);
 
   constructor(private http:HttpClient){}
+ getPagedItems(
+    catCode: string,
+    itemName: string,
+    uom: string,
+    pageNumber: number,
+    pageSize: number
+  ): Observable<PagedResult<Itemmaster>> {
 
+    let params = new HttpParams()
+      .set('catCode', catCode || '')
+      .set('itemName', itemName || '')
+      .set('uom', uom || '')
+      .set('pageNumber', pageNumber)
+      .set('pageSize', pageSize);
+
+    return this.http.get<PagedResult<Itemmaster>>(
+      `${this.apiUrl}/GetAllPaged`,
+      { params }
+    );
+  }
   getAll():Observable<Itemmaster[]>{
     return this.http.get<Itemmaster[]>(`${this.apiUrl}/GetAll`);
   }
