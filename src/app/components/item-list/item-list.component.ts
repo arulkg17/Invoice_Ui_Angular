@@ -175,7 +175,13 @@ export class ItemListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.loadItems();
+      if (result) 
+      {
+          this.snackBar.open('Item created successfully', 'Close', {
+            duration: 3000
+          });
+          this.loadItems();
+      }
     });
   }
 
@@ -189,7 +195,13 @@ export class ItemListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.loadItems();
+      if (result === true) 
+      {
+         this.snackBar.open('Item updated successfully', 'Close', {
+            duration: 3000
+          });
+        this.loadItems();
+      }
     });
   }
 }
