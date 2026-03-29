@@ -1,11 +1,8 @@
-  <h1>Welcome to Invoice Management System</h1>
-  <br />
   <div class="login-box">
        <h2> Login</h2>
-       <input [(ngModel)]="userName" placeholder="User Name" />
-       <input [(ngModel)]="password" type="password" placeholder="Password" />
+       User Name : <input [(ngModel)]="userName" placeholder="User Name" />
+       Password : <input [(ngModel)]="password" type="password" placeholder="Password" />
        <button (click)="login()">Login</button>
-       <button (click)="logout()">Logout</button>
        <div *ngIf="isLoginSuccess === true" class="color-green">
             {{message}}
        </div>

@@ -31,6 +31,12 @@ export const routes: Routes = [
       { path: 'receipt', loadComponent: () => import('./components/item-list/item-list.component').then(m => m.ItemListComponent) }
     ]
   },
-
+  {
+    path: 'exit',
+    canActivate:[authGuard],
+    children:[
+      { path:'logout', loadComponent:() => import('./pages/logout/logout.component').then(m=>m.LogoutComponent)}
+    ]
+  },
   { path: '**', redirectTo: 'home' }
 ];

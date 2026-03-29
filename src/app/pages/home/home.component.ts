@@ -36,9 +36,4 @@ export class HomeComponent {
       },
     });
   }
-  logout(){
-    this.service.logout();
-    this.isLoginSuccess= false;
-    this.message="Logged out successfully";
-  }
-}
+ }
