@@ -1,10 +1,17 @@
 <mat-toolbar class="top-menu">
-
   <!-- Home -->
-  <button mat-button routerLink="/home" routerLinkActive="active-link">Home</button>
+  <button mat-button routerLink="/home" routerLinkActive="active-link">
+    Home
+  </button>
 
   <!-- Masters Menu -->
-  <button mat-button [matMenuTriggerFor]="mastersMenu" routerLinkActive="active-link">Masters</button>
+  <button
+    mat-button
+    [matMenuTriggerFor]="mastersMenu"
+    routerLinkActive="active-link"
+  >
+    Masters
+  </button>
   <mat-menu #mastersMenu="matMenu">
     <button mat-menu-item routerLink="/masters/categories">Categories</button>
     <button mat-menu-item routerLink="/masters/items">Items</button>
@@ -13,11 +20,19 @@
   </mat-menu>
 
   <!-- Transactions Menu -->
-  <button mat-button [matMenuTriggerFor]="transMenu" routerLinkActive="active-link">Transactions</button>
+  <button
+    mat-button
+    [matMenuTriggerFor]="transMenu"
+    routerLinkActive="active-link"
+  >
+    Transactions
+  </button>
   <mat-menu #transMenu="matMenu">
     <button mat-menu-item routerLink="/transactions/indent">Indent</button>
     <button mat-menu-item routerLink="/transactions/po">Purchase Order</button>
-    <button mat-menu-item routerLink="/transactions/inward">Material Inward</button>
+    <button mat-menu-item routerLink="/transactions/inward">
+      Material Inward
+    </button>
     <button mat-menu-item routerLink="/transactions/receipt">Receipt</button>
   </mat-menu>
 
@@ -26,11 +41,26 @@
   <button mat-button>Reports</button>
   <button mat-button>Utilities</button>
 
+  <!-- Push user to right -->
   <span class="spacer"></span>
 
-  <button mat-button color="warn" [matMenuTriggerFor]="exitMenu" routerLinkActive="active-link">Exit</button>
+  <!-- Logged in User -->
+  <button mat-button class="user-name" [matMenuTriggerFor]="exitMenu">
+    <span class="user-icon">👤</span>
+
+    {{ currentUserName() || "User" }}
+  </button>
+
+  <button
+    mat-button
+    color="warn"
+    [matMenuTriggerFor]="exitMenu"
+    routerLinkActive="active-link"
+  >
+    Exit
+  </button>
   <mat-menu #exitMenu="matMenu">
-    <button mat-menu-item routerLink="/exit/logout">Logout</button> 
+    <button mat-menu-item routerLink="/exit/logout">Logout</button>
   </mat-menu>
 </mat-toolbar>
 
