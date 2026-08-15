@@ -6,37 +6,27 @@
       <div class="form-field">
         <mat-form-field appearance="outline" style="width: 50%">
           <mat-label>Category</mat-label>
-          <input matInput formControlName="catCode" appSelectOnFocus />
+
+          <mat-select formControlName="categoryId">
+            <mat-option [value]="null"> Select Category </mat-option>
+
+            <mat-option
+              *ngFor="let category of categories"
+              [value]="category.id"
+            >
+              {{ category.name }}
+            </mat-option>
+          </mat-select>
+
           <mat-error
             class="error-text"
             *ngIf="
-              (isSubmitted || f['catCode'].touched) &&
-              f['catCode'].errors?.['required']
+              (isSubmitted || f['categoryId'].touched) &&
+              f['categoryId'].errors?.['required']
             "
           >
-            <mat-icon color="warn">error</mat-icon> Category is required
-          </mat-error>
-          <mat-error
-            class="error-text"
-            *ngIf="
-              (isSubmitted || f['catCode'].touched) &&
-              f['catCode'].errors?.['minlength']
-            "
-          >
-            <mat-icon color="warn">error</mat-icon> Minimum
-            {{ f["catCode"].errors?.["minlength"]?.requiredLength }} character
-            required
-          </mat-error>
-          <mat-error
-            class="error-text"
-            *ngIf="
-              (isSubmitted || f['catCode'].touched) &&
-              f['catCode'].errors?.['maxlength']
-            "
-          >
-            <mat-icon color="warn">error</mat-icon> Maximum
-            {{ f["catCode"].errors?.["maxlength"]?.requiredLength }} characters
-            allowed
+            <mat-icon color="warn">error</mat-icon>
+            Category is required
           </mat-error>
         </mat-form-field>
       </div>
@@ -63,9 +53,7 @@
             "
           >
             <mat-icon color="warn">error</mat-icon> Minimum
-            {{
-              f["itemBarCode"].errors?.["minlength"]?.requiredLength
-            }}
+            {{ f["itemBarCode"].errors?.["minlength"]?.requiredLength }}
             character required
           </mat-error>
           <mat-error
@@ -76,9 +64,7 @@
             "
           >
             <mat-icon color="warn">error</mat-icon> Maximum
-            {{
-              f["itemBarCode"].errors?.["maxlength"]?.requiredLength
-            }}
+            {{ f["itemBarCode"].errors?.["maxlength"]?.requiredLength }}
             characters allowed
           </mat-error>
         </mat-form-field>
@@ -180,9 +166,7 @@
             "
           >
             <mat-icon color="warn">error</mat-icon> Maximum
-            {{
-              f["description"].errors?.["maxlength"]?.requiredLength
-            }}
+            {{ f["description"].errors?.["maxlength"]?.requiredLength }}
             characters allowed
           </mat-error>
         </mat-form-field>

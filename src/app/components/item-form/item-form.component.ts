@@ -6,7 +6,6 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ItemmasterService } from '../../services/itemmaster.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,6 +21,10 @@ import {
 } from '@angular/material/dialog';
 import { Itemmaster } from '../../models/itemmaster';
 import { SelectOnFocusDirective } from '../../custom-directives/select-on-focus.directive';
+import { firstValueFrom } from 'rxjs';
+import { Category } from '../../models/category';
+import { CategoryService } from '../../services/category.service';
+import { ApiResponse } from '../../models/api-response';
 
 @Component({
   selector: 'app-item-form',
@@ -29,7 +32,6 @@ import { SelectOnFocusDirective } from '../../custom-directives/select-on-focus.
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -49,11 +51,12 @@ export class ItemFormComponent implements OnInit {
   id!: number;
   uomLists: string[] = ['KGS', 'NOS', 'LTR', 'DOZ'];
   isSubmitted = false;
+  categories: Category[] = [];
+
   constructor(
     private fb: FormBuilder,
     private service: ItemmasterService,
-    private route: ActivatedRoute,
-    private router: Router,
+    private categoryService: CategoryService,
     private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<ItemFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -63,12 +66,10 @@ export class ItemFormComponent implements OnInit {
     return this.form.controls;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.form = this.fb.group({
-      catCode: [
-        '',
-        [Validators.required, Validators.minLength(1), Validators.maxLength(5)],
-      ],
+      categoryId: [null, Validators.required],
+
       itemBarCode: [
         '',
         [
@@ -77,6 +78,7 @@ export class ItemFormComponent implements OnInit {
           Validators.maxLength(25),
         ],
       ],
+
       itemCode: [
         '',
         [
@@ -85,6 +87,7 @@ export class ItemFormComponent implements OnInit {
           Validators.maxLength(10),
         ],
       ],
+
       itemName: [
         '',
         [
@@ -93,6 +96,7 @@ export class ItemFormComponent implements OnInit {
           Validators.maxLength(100),
         ],
       ],
+
       description: ['', Validators.maxLength(250)],
       uom: ['', Validators.required],
       rate: [0],
@@ -101,13 +105,36 @@ export class ItemFormComponent implements OnInit {
       isActive: [true],
     });
 
+    await this.loadCategories();
+
     if (this.data) {
       this.isEdit = true;
       this.id = this.data.id;
       this.form.patchValue(this.data);
     }
   }
+  async loadCategories(): Promise<void> {
+    try {
+      const response: ApiResponse<Category[]> = await firstValueFrom(
+        this.categoryService.getAll(),
+      );
 
+      if (!response.success) {
+        this.snackBar.open(
+          response.message || 'Unable to load categories',
+          'Close',
+          { duration: 3000 },
+        );
+        return;
+      }
+
+      this.categories = response.data ?? [];
+    } catch {
+      this.snackBar.open('Category loading error', 'Close', {
+        duration: 3000,
+      });
+    }
+  }
   submit() {
     this.isSubmitted = true;
     if (this.form.invalid) {

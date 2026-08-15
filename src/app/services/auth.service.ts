@@ -1,47 +1,88 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { LoginRequest } from "../models/loginrequest";
-import { LoginResponse } from "../models/loginresponse";
-import { Observable } from "rxjs";
+
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import { LoginRequest } from '../models/loginrequest';
+import { LoginResponse } from '../models/loginresponse';
+
+import { environment } from '../../environments/environment';
 
 @Injectable({
-    providedIn:'root'
+  providedIn: 'root'
 })
-export class AuthService{
-    private TOKEN_KEY = 'token';
-    private EXP_KEY = 'token_exp';
-    private tokenUrl = "http://localhost:5269/api/v1/Login/login";
+export class AuthService {
 
-    constructor(private http: HttpClient){}
-    
-    login(credentials:LoginRequest):Observable<LoginResponse>{
-        return this.http.post<LoginResponse>(this.tokenUrl, 
-           credentials);
-    }
-    
-    // Save token
-    setSession(token:string, expiration:string){
-        
-        localStorage.setItem(this.TOKEN_KEY, token);
-        localStorage.setItem(this.EXP_KEY, expiration);
-    }
-    // Get token
-    getToken():string | null {
-        return localStorage.getItem(this.TOKEN_KEY);
-    }
-    // Check token expired
-    isTokenExpired():boolean {
-        const exp = localStorage.getItem(this.EXP_KEY);
-        if(!exp) return true;
-        return new Date(exp) < new Date();
-    }
-    // Logout
-    logout(){
-        localStorage.removeItem(this.TOKEN_KEY);
-        localStorage.removeItem(this.EXP_KEY);
-    }
-    isLoggedIn(): boolean {
-         return !!localStorage.getItem('token');
+  private readonly TOKEN_KEY = 'token';
+  private readonly EXP_KEY = 'token_exp';
+
+  private readonly http = inject(HttpClient);
+
+  private readonly tokenUrl =
+    `${environment.apiUrl}/v1/login`;
+
+  login(credentials: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
+      this.tokenUrl,
+      credentials
+    );
+  }
+
+  setSession(
+    token: string,
+    expiration: string
+  ): void {
+
+    localStorage.setItem(
+      this.TOKEN_KEY,
+      token
+    );
+
+    localStorage.setItem(
+      this.EXP_KEY,
+      expiration
+    );
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(
+      this.TOKEN_KEY
+    );
+  }
+
+  getExpiration(): string | null {
+    return localStorage.getItem(
+      this.EXP_KEY
+    );
+  }
+
+  isTokenExpired(): boolean {
+
+    const expiration =
+      this.getExpiration();
+
+    if (!expiration) {
+      return true;
     }
 
+    return new Date(expiration) < new Date();
+  }
+
+  logout(): void {
+
+    localStorage.removeItem(
+      this.TOKEN_KEY
+    );
+
+    localStorage.removeItem(
+      this.EXP_KEY
+    );
+  }
+
+  isLoggedIn(): boolean {
+
+    return !!this.getToken()
+      && !this.isTokenExpired();
+  }
 }
+

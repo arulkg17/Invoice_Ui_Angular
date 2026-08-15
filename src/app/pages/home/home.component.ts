@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 export class HomeComponent {
   isLoginSuccess: boolean | null = null;
   userName = 'admin';
-  password = 'password';
+  password = 'Admin@123';
   message = '';
 
   constructor(private service: AuthService) {}
@@ -24,8 +24,8 @@ export class HomeComponent {
       password: this.password,
     };
     this.service.login(param).subscribe({
-      next: (res) => {
-        this.service.setSession(res.token, res.expiration);
+      next: (response) => {
+        this.service.setSession(response.data.token, response.data.expiration);
         this.isLoginSuccess = true;
         this.message = 'Login Successfull';
       },
@@ -36,4 +36,4 @@ export class HomeComponent {
       },
     });
   }
- }
+}
