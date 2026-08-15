@@ -1,20 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ItemmasterService } from '../../services/itemmaster.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
-
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogContent,
+} from '@angular/material/dialog';
 import { Itemmaster } from '../../models/itemmaster';
-import { SelectOnFocusDirective } from "../../custom-directives/select-on-focus.directive";
+import { SelectOnFocusDirective } from '../../custom-directives/select-on-focus.directive';
+import { firstValueFrom } from 'rxjs';
+import { Category } from '../../models/category';
+import { CategoryService } from '../../services/category.service';
+import { ApiResponse } from '../../models/api-response';
 
 @Component({
   selector: 'app-item-form',
@@ -22,112 +32,153 @@ import { SelectOnFocusDirective } from "../../custom-directives/select-on-focus.
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatRadioModule,
     MatSelectModule,
     MatIconModule,
-    SelectOnFocusDirective
-],
+    SelectOnFocusDirective,
+    MatDialogContent,
+  ],
   templateUrl: './item-form.component.html',
-  styleUrls: ['./item-form.component.css']
+  styleUrls: ['./item-form.component.css'],
 })
 export class ItemFormComponent implements OnInit {
+  form!: FormGroup;
 
-  form!:FormGroup;
-  
   isEdit = false;
   id!: number;
-  uomLists : string[] = ['KGS','NOS','LTR','DOZ'];
+  uomLists: string[] = ['KGS', 'NOS', 'LTR', 'DOZ'];
   isSubmitted = false;
+  categories: Category[] = [];
+
   constructor(
     private fb: FormBuilder,
     private service: ItemmasterService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private snackBar: MatSnackBar
+    private categoryService: CategoryService,
+    private snackBar: MatSnackBar,
+    public dialogRef: MatDialogRef<ItemFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) {}
-  
-  get f(){
+
+  get f() {
     return this.form.controls;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.form = this.fb.group({
-      catCode: ['', [Validators.required, Validators.minLength(1),Validators.maxLength(5)]],
-      itemBarCode:['', [Validators.required, Validators.minLength(1), Validators.maxLength(25)]],
-      itemCode: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(10)]],
-      itemName: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]],
-      description:['', Validators.maxLength(250)],
-      uom:['', Validators.required],
-      rate:[0],
-      minimumStock:[0],
-      maximumStock:[0],
-      isActive:[true]
+      categoryId: [null, Validators.required],
+
+      itemBarCode: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(25),
+        ],
+      ],
+
+      itemCode: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(10),
+        ],
+      ],
+
+      itemName: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(1),
+          Validators.maxLength(100),
+        ],
+      ],
+
+      description: ['', Validators.maxLength(250)],
+      uom: ['', Validators.required],
+      rate: [0],
+      minimumStock: [0],
+      maximumStock: [0],
+      isActive: [true],
     });
 
-    this.id = this.route.snapshot.params['id'];
+    await this.loadCategories();
 
-    if (this.id) {
+    if (this.data) {
       this.isEdit = true;
+      this.id = this.data.id;
+      this.form.patchValue(this.data);
+    }
+  }
+  async loadCategories(): Promise<void> {
+    try {
+      const response: ApiResponse<Category[]> = await firstValueFrom(
+        this.categoryService.getAll(),
+      );
 
-      this.service.getById(this.id).subscribe({
-        next: (res:any) => {
-          this.form.patchValue(res.data);
-        },
-        error: () => {
-          this.snackBar.open('Error loading item', 'Close', { duration: 3000 });
-        }
+      if (!response.success) {
+        this.snackBar.open(
+          response.message || 'Unable to load categories',
+          'Close',
+          { duration: 3000 },
+        );
+        return;
+      }
+
+      this.categories = response.data ?? [];
+    } catch {
+      this.snackBar.open('Category loading error', 'Close', {
+        duration: 3000,
       });
     }
   }
-
   submit() {
     this.isSubmitted = true;
-    if(this.form.invalid)
-      { 
-       this.form.markAllAsTouched();
-        return;
-      }
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     const formValue = this.form.value;
     const payload: Itemmaster = {
-        ...formValue,
-        rate: Number(formValue.rate),
-        minimumStock: Number(formValue.minimumStock),
-        maximumStock: Number(formValue.maximumStock),
-        isActive: formValue.isActive === true
+      ...formValue,
+      rate: Number(formValue.rate),
+      minimumStock: Number(formValue.minimumStock),
+      maximumStock: Number(formValue.maximumStock),
+      isActive: formValue.isActive === true,
     };
 
     if (this.isEdit) {
       this.service.update(this.id, payload).subscribe({
         next: () => {
-          this.snackBar.open('Item updated successfully', 'Close', {
-            duration: 3000
-          });
-          this.router.navigate(['/masters/items']);
+          this.dialogRef.close(true);
         },
         error: () => {
           this.snackBar.open('Error updating item', 'Close', {
-            duration: 3000
+            duration: 3000,
           });
-        }
+        },
       });
     } else {
       this.service.create(payload).subscribe({
         next: () => {
-          this.snackBar.open('Item created successfully', 'Close', {
-            duration: 3000
-          });
-          this.router.navigate(['/masters/items']);
+          this.dialogRef.close(true);
         },
         error: () => {
           this.snackBar.open('Error creating item', 'Close', {
-            duration: 3000
+            duration: 3000,
           });
-        }
+        },
       });
+    }
+  }
+  allowOnlyNumbers(event: KeyboardEvent) {
+    const charCode = event.key;
+
+    if (!/^[0-9]$/.test(charCode)) {
+      event.preventDefault();
     }
   }
 }
