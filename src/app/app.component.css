@@ -45,3 +45,19 @@
 .top-menu button.active-link {
   background: linear-gradient(90deg, #1976d2, #42a5f5);
 }
+.top-menu {
+  display: flex;
+  align-items: center;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.user-icon {
+  margin-right: 6px;
+}
